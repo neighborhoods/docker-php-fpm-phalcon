@@ -89,14 +89,3 @@ RUN docker-php-ext-install opcache && \
 # Install composer and add its bin to the PATH.
 RUN curl -s http://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
-
-# Install Phalcon Dev Tools
-RUN mkdir /opt/phalcon-tools && /
-    chmod 0755 /opt/phalcon-tools
-
-COPY devtools-composer.json /opt/phalcon-tools
-
-RUN cd /opt/phalcon-tools && /
-    composer install && /
-    ln -s /opt/phalcon-tools/vendor/phalcon/devtools/phalcon.php /usr/local/bin/phalcon && /
-    chmod 0755 /usr/local/bin/phalcon
