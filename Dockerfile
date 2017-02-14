@@ -41,7 +41,7 @@ RUN docker-php-ext-install \
 
 
 # Install Phalcon
-RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/phalcon-v2.0.10.tar.gz' -o phalcon.tar.gz \
+RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.0.3.tar.gz' -o phalcon.tar.gz \
     && mkdir -p phalcon \
     && tar -xf phalcon.tar.gz -C phalcon --strip-components=1 \
     && rm phalcon.tar.gz \
@@ -72,7 +72,7 @@ RUN pecl install redis-2.2.8 && \
     docker-php-ext-enable redis
 
 ## Install Memcached
-RUN pecl install memcached \
+RUN pecl install memcached-2.2.0 \
     && docker-php-ext-enable memcached
 
 ## Install IMAP
