@@ -72,7 +72,7 @@ RUN pecl install redis-2.2.8 && \
     docker-php-ext-enable redis
 
 ## Install Memcached
-RUN pecl install memcached \
+RUN pecl install memcached-2.2.0 \
     && docker-php-ext-enable memcached
 
 ## Install IMAP
