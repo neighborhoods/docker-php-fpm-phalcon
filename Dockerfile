@@ -1,4 +1,4 @@
-FROM php:5.6-fpm
+FROM php:7.1-fpm
 
 # Install base libs
 RUN apt-get update && \
@@ -39,40 +39,25 @@ RUN docker-php-ext-install \
     sysvsem \
     sysvshm
 
-
-# Install Phalcon
-RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/phalcon-v2.0.10.tar.gz' -o phalcon.tar.gz \
-    && mkdir -p phalcon \
-    && tar -xf phalcon.tar.gz -C phalcon --strip-components=1 \
-    && rm phalcon.tar.gz \
-    && cd phalcon/build \
-    && ./install \
-    && cd ../../ \
-    && rm -r phalcon \
-    && docker-php-ext-enable phalcon
-
 # Install gd
-RUN docker-php-ext-install gd && \
-    docker-php-ext-configure gd \
+RUN docker-php-ext-configure gd \
         --enable-gd-native-ttf \
         --with-jpeg-dir=/usr/lib \
         --with-freetype-dir=/usr/include/freetype2 && \
     docker-php-ext-install gd
 
 # Install the PHP pdo_mysql extention
-RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd && \
-    docker-php-ext-configure mysql --with-mysql=mysqlnd && \
-    docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql
 
 # Install the PHP pdo_pgsql extention
 RUN docker-php-ext-install pdo_pgsql
 
 ## Install Redis
-RUN pecl install redis-2.2.8 && \
+RUN pecl install redis-3.1.4 && \
     docker-php-ext-enable redis
 
 ## Install Memcached
-RUN pecl install memcached-2.2.0 \
+RUN pecl install memcached \
     && docker-php-ext-enable memcached
 
 ## Install IMAP
@@ -80,7 +65,7 @@ RUN docker-php-ext-configure imap --with-imap-ssl --with-kerberos && \
 	docker-php-ext-install imap
 
 ## Install Zookeeper
-RUN pecl install zookeeper-0.2.3 \
+RUN pecl install zookeeper-0.3.2 \
     && docker-php-ext-enable zookeeper
 
 ## Install Opcache
@@ -90,3 +75,14 @@ RUN docker-php-ext-install opcache && \
 # Install composer and add its bin to the PATH.
 RUN curl -s http://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
+
+# Install Phalcon
+RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.2.4.tar.gz' -o phalcon.tar.gz \
+    && mkdir -p phalcon \
+    && tar -xf phalcon.tar.gz -C phalcon --strip-components=1 \
+    && rm phalcon.tar.gz \
+    && cd phalcon/build \
+    && ./install \
+    && cd ../../ \
+    && rm -r phalcon \
+    && docker-php-ext-enable phalcon
