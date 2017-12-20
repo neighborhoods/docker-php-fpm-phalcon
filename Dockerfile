@@ -4,6 +4,8 @@ FROM php:7.1-fpm
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
+        jq \
+        openssh-client \
         wget \
         git \
         libmemcached-dev \
@@ -18,10 +20,9 @@ RUN apt-get update && \
         libedit-dev \
         libc-client-dev \
         libkrb5-dev \
-        libzookeeper-mt-dev
-
-# Clean Apt Lists
-RUN rm -r /var/lib/apt/lists/*
+        libzookeeper-mt-dev \
+        && \
+    rm -r /var/lib/apt/lists/*
 
 ## Install PHP core modules
 RUN docker-php-ext-install \
