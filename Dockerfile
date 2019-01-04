@@ -12,7 +12,7 @@ RUN apt-get update && \
         libz-dev \
         libpq-dev \
         libjpeg-dev \
-        libpng12-dev \
+        libpng-dev \
         libfreetype6-dev \
         libssl-dev \
         libmcrypt-dev \
@@ -21,6 +21,7 @@ RUN apt-get update && \
         libc-client-dev \
         libkrb5-dev \
         libzookeeper-mt-dev \
+        gettext-base \
         && \
     rm -r /var/lib/apt/lists/*
 
@@ -87,3 +88,18 @@ RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.2.4.tar.gz' -o ph
     && cd ../../ \
     && rm -r phalcon \
     && docker-php-ext-enable phalcon
+
+# Install New Relic Agent
+RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-8.5.0.235-linux.tar.gz \
+    | tar -C /tmp -zx \
+    && export NR_INSTALL_USE_CP_NOT_LN=1 \
+    && export NR_INSTALL_SILENT=1 \
+    && /tmp/newrelic-php5-*/newrelic-install install \
+    && rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* \
+    && rm -f /usr/local/etc/php/conf.d/newrelic.ini
+COPY newrelic.ini.template /usr/local/etc/php/conf.d/newrelic.ini.template
+
+# Set up entrypoint script to regenerate new relic config at container start
+COPY entrypoint.sh /usr/local/bin
+RUN chmod a=rx /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
