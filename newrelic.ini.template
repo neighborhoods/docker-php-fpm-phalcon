@@ -1,0 +1,6 @@
+extension = "newrelic.so"
+[newrelic]
+newrelic.license = "$NR_LICENSE_KEY"
+newrelic.appname = "$NR_APP_NAME"
+newrelic.logfile = "/var/log/newrelic/php_agent.log"
+newrelic.daemon.logfile = "/var/log/newrelic/newrelic-daemon.log"
