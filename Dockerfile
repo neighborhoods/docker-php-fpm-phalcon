@@ -25,6 +25,7 @@ RUN apt-get update && \
         gcc \
         make \
         re2c \
+        gettext-base \
         && \
     rm -r /var/lib/apt/lists/*
 
@@ -76,9 +77,6 @@ RUN curl -L -o /tmp/zookeeper.tar.gz https://github.com/php-zookeeper/php-zookee
     && docker-php-ext-install /tmp/zookeeper \
     && rm -r /tmp/zookeeper
 
-#RUN pecl install zookeeper-0.3.2 \
-#    && docker-php-ext-enable zookeeper
-
 ## Install Opcache
 RUN docker-php-ext-install opcache && \
     docker-php-ext-enable opcache
@@ -97,3 +95,18 @@ RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.4.4.tar.gz' -o ph
     && cd ../../ \
     && rm -r phalcon \
     && docker-php-ext-enable phalcon
+
+# Install New Relic Agent
+RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.1.0.246-linux.tar.gz \
+    | tar -C /tmp -zx \
+    && export NR_INSTALL_USE_CP_NOT_LN=1 \
+    && export NR_INSTALL_SILENT=1 \
+    && /tmp/newrelic-php5-*/newrelic-install install \
+    && rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* \
+    && rm -f /usr/local/etc/php/conf.d/newrelic.ini
+COPY newrelic.ini.template /usr/local/etc/php/conf.d/newrelic.ini.template
+
+# Set up entrypoint script to regenerate new relic config at container start
+COPY entrypoint.sh /usr/local/bin
+RUN chmod a=rx /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
