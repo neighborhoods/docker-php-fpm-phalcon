@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 # Install base libs
 RUN apt-get update && \
@@ -21,6 +21,7 @@ RUN apt-get update && \
         libkrb5-dev \
         libzookeeper-mt-dev \
         libpcre3-dev \
+        libzip-dev \
         gcc \
         make \
         re2c \
@@ -56,7 +57,7 @@ RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install pdo_pgsql
 
 ## Install Redis
-RUN pecl install redis-3.1.4 && \
+RUN pecl install redis-5.0.2 && \
     docker-php-ext-enable redis
 
 ## Install Memcached
@@ -87,7 +88,7 @@ RUN curl -s http://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
 
 # Install Phalcon
-RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.4.1.tar.gz' -o phalcon.tar.gz \
+RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.4.4.tar.gz' -o phalcon.tar.gz \
     && mkdir -p phalcon \
     && tar -xf phalcon.tar.gz -C phalcon --strip-components=1 \
     && rm phalcon.tar.gz \
