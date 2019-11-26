@@ -97,7 +97,7 @@ RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.4.4.tar.gz' -o ph
     && docker-php-ext-enable phalcon
 
 # Install New Relic Agent
-RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.1.0.246-linux.tar.gz \
+RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.3.0.248-linux.tar.gz \
     | tar -C /tmp -zx \
     && export NR_INSTALL_USE_CP_NOT_LN=1 \
     && export NR_INSTALL_SILENT=1 \
