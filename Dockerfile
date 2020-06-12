@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.3.12-fpm
 
 # Install base libs
 RUN apt-get update && \
@@ -46,7 +46,6 @@ RUN docker-php-ext-install \
 
 # Install gd
 RUN docker-php-ext-configure gd \
-        --enable-gd-native-ttf \
         --with-jpeg-dir=/usr/lib \
         --with-freetype-dir=/usr/include/freetype2 && \
     docker-php-ext-install gd
@@ -96,15 +95,15 @@ RUN curl -fsSL 'https://github.com/phalcon/cphalcon/archive/v3.4.4.tar.gz' -o ph
     && rm -r phalcon \
     && docker-php-ext-enable phalcon
 
-# Install New Relic Agent
-RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.3.0.248-linux.tar.gz \
-    | tar -C /tmp -zx \
-    && export NR_INSTALL_USE_CP_NOT_LN=1 \
-    && export NR_INSTALL_SILENT=1 \
-    && /tmp/newrelic-php5-*/newrelic-install install \
-    && rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* \
-    && rm -f /usr/local/etc/php/conf.d/newrelic.ini
-COPY newrelic.ini.template /usr/local/etc/php/conf.d/newrelic.ini.template
+## Install New Relic Agent
+#RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.3.0.248-linux.tar.gz \
+#    | tar -C /tmp -zx \
+#    && export NR_INSTALL_USE_CP_NOT_LN=1 \
+#    && export NR_INSTALL_SILENT=1 \
+#    && /tmp/newrelic-php5-*/newrelic-install install \
+#    && rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* \
+#    && rm -f /usr/local/etc/php/conf.d/newrelic.ini
+#COPY newrelic.ini.template /usr/local/etc/php/conf.d/newrelic.ini.template
 
 # Set up entrypoint script to regenerate new relic config at container start
 COPY entrypoint.sh /usr/local/bin
